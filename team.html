@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Web sepak bola</title>
+  <link rel="stylesheet" href="./vendor/css/materialize.min.css">
+  <link rel="stylesheet" href="./assets/css/main.css">
+</head>
+<body>
+
+  <!-- navbar -->
+  <nav class="white z-depth-0 nav-component">
+    <div class="nav-wrapper container">
+      <a href="#home" class="brand-logo black-text" id="logo">
+        EPL
+      </a>
+      <a href="#" style="font-size:1.5rem" class="sidenav-trigger black-text" data-target="mobile-nav">
+        ☰
+      </a>
+
+      <!-- topnav -->
+      <ul class="topnav right hide-on-med-and-down">
+        <li><a href="./index.html" class="waves-effect black-text">Klasemen</a></li>
+        <li><a href="" class="waves-effect black-text">Jadwal</a></li>
+        <li><a href="" class="waves-effect black-text">My Team</a></li>
+      </ul>
+      
+      <!-- sidenav -->
+      <ul class="sidenav" id="mobile-nav">
+        <li><a href="./index.html" class="waves-effect black-text">Klasemen</a></li>
+        <li><a href="#" class="waves-effect black-text">Jadwal</a></li>
+        <li><a href="#" class="waves-effect black-text">My Team</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- navbar -->
+
+  <!-- content -->
+  <div class="container" id="content"></div>
+
+
+  <!-- materialize -->
+  <script src="./vendor/js/materialize.min.js"></script>
+  <script src="./assets/js/navbar.js"></script> 
+  <script src="./assets/js/api.js"></script>
+  <script src="./assets/js/register-sw.js"></script>
+  <script>
+
+    const setupTeam = async () => {
+      // get data
+      const urlParams = new URLSearchParams(location.search);
+      const teamId = urlParams.get('id');
+      const teamInfo = await getTeam(teamId);
+      const teamMatches = await getTeamMatches(teamId);
+
+      // get view
+      const contentDOM = document.querySelector('#content');
+      contentDOM.innerHTML = `
+        <div>
+          <h1>${teamInfo.name}</h1>
+          <img src="${teamInfo.crestUrl}"/> 
+        </div>
+      `;
+    };
+
+    const init = async () => {
+      setupTeam();
+    };
+
+    init();
+  </script>
+</body>
+</html>
