@@ -6,8 +6,10 @@ const OFFILE_ASSETS = [
   '/assets/js/api.js',
   '/assets/js/navbar.js',
   '/assets/js/register-sw.js',
+  '/assets/js/indexed-db.js',
   '/vendor/css/materialize.min.css',
   '/vendor/js/materialize.min.js',
+  '/vendor/js/idb.js',
   '/index.html',
   '/team.html',
   '/',
@@ -69,7 +71,7 @@ self.addEventListener('fetch', event => {
   }
 
   event.respondWith(
-    event.request.url.includes(BASE_URL)
+    safeUrl(event.request.url).includes(BASE_URL)
       ? addToCache()
       : checkOnCache()
   );

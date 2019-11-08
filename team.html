@@ -41,10 +41,11 @@
   <div class="container" id="content"></div>
 
 
-  <!-- materialize -->
   <script src="./vendor/js/materialize.min.js"></script>
+  <script src="./vendor/js/idb.js"></script>
   <script src="./assets/js/navbar.js"></script> 
   <script src="./assets/js/api.js"></script>
+  <script src="./assets/js/indexed-db.js"></script>
   <script src="./assets/js/register-sw.js"></script>
   <script>
 
@@ -60,10 +61,18 @@
       contentDOM.innerHTML = `
         <div>
           <h3>${teamInfo.name}</h3>
-          <img src="${teamInfo.crestUrl}"/> 
+          <img class="responsive-img" alt="logo" src="${teamInfo.crestUrl}"/> 
+          <button onclick="setAsMyTeam(${teamInfo.id})">Set as my team</button>
         </div>
       `;
     };
+
+    // mengatur agar menjadi tim terfavorit user (hanya 1)
+    const setAsMyTeam = async id => {
+      await dbDataCreate({ objectStore: 'my_team', payload: await getTeam(id) });
+      console.log(await dbDataRead({ objectStore: 'my_team' }));
+      // dbDataDelete({ objectStore: 'my_team', keyPath: id });
+    }
 
     // semua fungsi saat load dijalankan disini
     const init = async () => {
