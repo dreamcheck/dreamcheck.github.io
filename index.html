@@ -74,10 +74,14 @@
       contentDOM.innerHTML = contentHTML;
     };
 
+    // semua fungsi saat load dijalankan disini
     const init = async () => {
       await setupKlasemen();
     };
-    init();
+
+    // fungsi berasal dari register-sw.js
+    // menjalankan init() setelah service worker terdaftar
+    registerServiceWorker(init);
   </script>
 </body>
 </html>

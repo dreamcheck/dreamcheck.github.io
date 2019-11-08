@@ -26,7 +26,7 @@ const getRequest = async (url) => {
         
         // jika data tidak sama maka gunakan data dari server
         if (JSON.stringify(serverData) != JSON.stringify(cacheData)){
-          console.log(`[Service Worker]: load server ${url}`);
+          console.log(`[Service Worker]: update from server ${url}`);
           return serverResponse.json();
         }
       }

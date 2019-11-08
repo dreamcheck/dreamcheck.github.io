@@ -65,11 +65,14 @@
       `;
     };
 
+    // semua fungsi saat load dijalankan disini
     const init = async () => {
       setupTeam();
     };
 
-    init();
+    // fungsi berasal dari register-sw.js
+    // menjalankan init() setelah service worker terdaftar
+    registerServiceWorker(init);
   </script>
 </body>
 </html>
