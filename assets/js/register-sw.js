@@ -3,7 +3,7 @@ const registerServiceWorker = async (callback = () => {}) => {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
-        await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.register('/sw.js', { scope: '/' });
         const registration = await navigator.serviceWorker.ready; 
         if (registration) {
           console.log('[Service Worker]: berhasil didaftarkan');

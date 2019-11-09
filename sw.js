@@ -9,6 +9,7 @@ const OFFILE_ASSETS = [
   '/assets/js/navbar.js',
   '/assets/js/register-sw.js',
   '/assets/js/indexed-db.js',
+  '/assets/js/loading.js',
   '/vendor/css/materialize.min.css',
   '/vendor/js/materialize.min.js',
   '/vendor/js/idb.js',
@@ -27,10 +28,11 @@ self.addEventListener('install', event => {
     return cache.addAll(OFFILE_ASSETS);
   };
   
-  // selalu menggunakan file service worker terbaru
-  self.skipWaiting();
-  
+  console.log('[Service Worker]: event install');
   event.waitUntil(preCache());
+
+  // selalu menggunakan service worker versi terbaru
+  self.skipWaiting();
 });
 
 // event active
@@ -49,9 +51,10 @@ self.addEventListener('activate', event => {
     );
   };
 
+  console.log('[Service Worker]: event activate');
   event.waitUntil(Promise.all([
-    clients.claim(),
     deleteOtherCache(),
+    clients.claim(),
   ]));
 });
 

@@ -2,7 +2,7 @@
   "name": "EPL",
   "short_name": "EPL",
   "description": "English Premiere League app",
-  "start_url": "/index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",

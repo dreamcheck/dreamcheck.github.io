@@ -1,7 +1,7 @@
 // setting url
 const BASE_URL = 'https://api.football-data.org/v2';
 
-// option pada fetch headers
+// option pada fetch
 const headers = {
   'X-Auth-Token': '8e4451c2e3714fb095f3762553f7578a',
 };

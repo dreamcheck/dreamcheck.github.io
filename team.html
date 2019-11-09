@@ -11,10 +11,26 @@
 </head>
 <body>
 
+  <!-- loading -->
+  <div id="loading">
+    <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue-only">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- loading -->
+
   <!-- navbar -->
   <nav class="white z-depth-0 nav-component">
     <div class="nav-wrapper container">
-      <a href="#home" class="brand-logo black-text" id="logo">
+      <a href="/" class="brand-logo black-text" id="logo">
         EPL
       </a>
       <a href="#" style="font-size:1.5rem" class="sidenav-trigger black-text" data-target="mobile-nav">
@@ -23,14 +39,14 @@
 
       <!-- topnav -->
       <ul class="topnav right hide-on-med-and-down">
-        <li><a href="./index.html" class="waves-effect black-text">Klasemen</a></li>
+        <li><a href="/" class="waves-effect black-text">Klasemen</a></li>
         <li><a href="" class="waves-effect black-text">Jadwal</a></li>
         <li><a href="" class="waves-effect black-text">My Team</a></li>
       </ul>
       
       <!-- sidenav -->
       <ul class="sidenav" id="mobile-nav">
-        <li><a href="./index.html" class="waves-effect black-text">Klasemen</a></li>
+        <li><a href="/" class="waves-effect black-text">Klasemen</a></li>
         <li><a href="#" class="waves-effect black-text">Jadwal</a></li>
         <li><a href="#" class="waves-effect black-text">My Team</a></li>
       </ul>
@@ -48,36 +64,67 @@
   <script src="./assets/js/api.js"></script>
   <script src="./assets/js/indexed-db.js"></script>
   <script src="./assets/js/register-sw.js"></script>
+  <script src="./assets/js/loading.js"></script>
   <script>
 
     const setupTeam = async () => {
-      // get data
-      const urlParams = new URLSearchParams(location.search);
-      const teamId = urlParams.get('id');
-      const teamInfo = await getTeam(teamId);
-      const teamMatches = await getTeamMatches(teamId);
 
-      // get view
       const contentDOM = document.querySelector('#content');
-      contentDOM.innerHTML = `
-        <div>
-          <h3>${teamInfo.name}</h3>
-          <img class="responsive-img" alt="logo" src="${teamInfo.crestUrl}"/> 
-          <button onclick="setAsMyTeam(${teamInfo.id})">Set as my team</button>
-        </div>
-      `;
+      let contentHTML = '';
+      try {
+        // get data
+        const urlParams = new URLSearchParams(location.search);
+        const teamId = urlParams.get('id');
+        const teamInfo = await getTeam(teamId);
+        const teamMatches = await getTeamMatches(teamId);
+        contentHTML = `
+          <div>
+            <h3>${teamInfo.name}</h3>
+            <img class="responsive-img" alt="logo" src="${teamInfo.crestUrl}"/> 
+            <button onclick="setAsMyTeam(${teamInfo.id})">Set as my team</button>
+          </div>
+        `;
+      } catch (error) {
+        contentHTML = `
+          <div>
+            <h3>tidak tidak dapat memuat halaman</h3>  
+          </div>
+        `;
+      } finally {
+        // get view
+        contentDOM.innerHTML = contentHTML;
+      }
+
     };
 
     // mengatur agar menjadi tim terfavorit user (hanya 1)
     const setAsMyTeam = async id => {
-      // await dbDataCreate({ objectStore: 'my_team', payload: await getTeam(id) });
-      console.log(await dbDataRead({ objectStore: 'my_team', keyPath: 64 }));
-      // dbDataDelete({ objectStore: 'my_team', keyPath: id });
+      
+      let teamExist = false;
+
+      // memastikan my_team hanya ada satu
+      // mengambil semua data
+      const teams = await dbDataRead({ objectStore: 'my_team' });
+      
+      // jika ada data lain maka hapus data 
+      teams.length && teams.forEach(async team => {
+        if (id == team.id) {
+          teamExist = true;
+        } else {
+          await dbDataDelete({ objectStore: 'my_team', keyPath: team.id });
+        }
+      });
+      
+      // memasukkan data baru jika data belum ada
+      !teamExist &&  
+        await dbDataCreate({ objectStore: 'my_team', payload: await getTeam(id) }) 
     }
 
     // semua fungsi saat load dijalankan disini
     const init = async () => {
-      setupTeam();
+      await loading(true);
+      await setupTeam();
+      await loading(false);
     };
 
     // fungsi berasal dari register-sw.js

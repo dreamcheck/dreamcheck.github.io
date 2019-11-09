@@ -11,10 +11,26 @@
 </head>
 <body>
 
+  <!-- loading -->
+  <div id="loading">
+    <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue-only">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- loading -->
+
   <!-- navbar -->
   <nav class="white z-depth-0 nav-component">
     <div class="nav-wrapper container">
-      <a href="#home" class="brand-logo black-text" id="logo">
+      <a href="/" class="brand-logo black-text" id="logo">
         EPL
       </a>
       <a href="#" style="font-size:2rem" class="sidenav-trigger black-text" data-target="mobile-nav">
@@ -23,14 +39,14 @@
 
       <!-- topnav -->
       <ul class="topnav right hide-on-med-and-down">
-        <li><a href="./index.html" class="waves-effect black-text">Klasemen</a></li>
+        <li><a href="/" class="waves-effect black-text">Klasemen</a></li>
         <li><a href="" class="waves-effect black-text">Jadwal</a></li>
         <li><a href="" class="waves-effect black-text">My Team</a></li>
       </ul>
       
       <!-- sidenav -->
       <ul class="sidenav" id="mobile-nav">
-        <li><a href="./index.html" class="waves-effect black-text">Klasemen</a></li>
+        <li><a href="/" class="waves-effect black-text">Klasemen</a></li>
         <li><a href="#" class="waves-effect black-text">Jadwal</a></li>
         <li><a href="#" class="waves-effect black-text">My Team</a></li>
       </ul>
@@ -52,32 +68,44 @@
   <script src="./assets/js/navbar.js"></script> 
   <script src="./assets/js/api.js"></script>
   <script src="./assets/js/register-sw.js"></script>
+  <script src="./assets/js/loading.js"></script>
   <script>
     const setupKlasemen = async () => {
       const contentDOM = document.querySelector('#content .collection');
       let contentHTML = '';
-      const data = await getKlasemen();
-      data.standings[0].table.forEach(row => {
-        contentHTML += `
-          <li 
-            class="collection-item avatar" 
-            onclick="location.href = './team.html?id=${row.team.id}'"
-            style="cursor: pointer"
-            >
-            <img src="${safeUrl(row.team.crestUrl)}" alt="" class="circle" width="50">
-            <span class="title">${row.team.name}</span>
-            <p>
-              Posisi ${row.position} <br/>
-              Poin ${row.points}
-            </p>
-          </li>`;
-      });
-      contentDOM.innerHTML = contentHTML;
+
+      try {
+        const data = await getKlasemen();
+        data.standings[0].table.forEach(row => {
+          contentHTML += `
+            <li 
+              class="collection-item avatar" 
+              onclick="location.href = './team.html?id=${row.team.id}'"
+              style="cursor: pointer"
+              >
+              <img src="${safeUrl(row.team.crestUrl)}" alt="" class="circle" width="50">
+              <span class="title">${row.team.name}</span>
+              <p>
+                Posisi ${row.position} <br/>
+                Poin ${row.points}
+              </p>
+            </li>`;
+        });
+      } catch (error) {
+        contentHTML = `
+          <div>
+            <h3>tidak dapat memuat halaman</h3>  
+          </div>`;
+      } finally {
+        contentDOM.innerHTML = contentHTML;
+      }
     };
 
     // semua fungsi saat load dijalankan disini
     const init = async () => {
+      await loading(true);
       await setupKlasemen();
+      await loading(false);
     };
 
     // fungsi berasal dari register-sw.js
