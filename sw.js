@@ -3,8 +3,12 @@
 const CACHE_NAME = 'football-app';
 const OFFILE_ASSETS = [
   '/assets/css/main.css',
+  '/assets/css/_vector.css',
   '/assets/img/icon/iconfinder_Soccer_512x512.png',
   '/assets/img/icon/iconfinder_Soccer_192x192.png',
+  '/assets/img/vector/ellipse1.svg',
+  '/assets/img/vector/ellipse2.svg',
+  '/assets/img/vector/ellipse3.svg',
   '/assets/js/api.js',
   '/assets/js/navbar.js',
   '/assets/js/register-sw.js',
@@ -14,6 +18,7 @@ const OFFILE_ASSETS = [
   '/vendor/css/materialize.min.css',
   '/vendor/js/materialize.min.js',
   '/vendor/js/idb.js',
+  '/favicon.ico',
   '/manifest.json',
   '/index.html',
   '/team.html',
@@ -90,7 +95,7 @@ self.addEventListener('fetch', event => {
 
 // event push
 self.addEventListener('push', event => {
-  let body = 'Push manager have no message';
+  let body = 'Push manager tidak memiliki pesan';
   if (event.data) 
     body = event.data.text();
 
@@ -107,6 +112,6 @@ self.addEventListener('push', event => {
 
   event.waitUntil(
     // menampilkan notifikasi
-    self.registration.showNotification('EPL Notification', options)
+    self.registration.showNotification('EPL News', options)
   );
 })

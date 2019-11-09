@@ -17,6 +17,8 @@ const uInt8ArrayToStr = (uInt8Array) => {
 
 // fungsi untuk meminta akses notifikasi pada user
 const permissionNotification = async () => {
+
+  // cek dukungan notifikasi pada browser
   if ('Notification' in window) {
     
     // menunggu jawaban user
@@ -24,10 +26,10 @@ const permissionNotification = async () => {
     
     // jawaban user
     if (result === 'denied') {
-      console.log('[Notification]: access denied');
+      console.log('[Notification]: akses ditolak');
       return;
     } else if (result === 'default') {
-      console.log('[Notification]: user close the request permission modal');
+      console.log('[Notification]: user menutup modal permintaan akses');
       return;
     } else {
 
@@ -45,12 +47,12 @@ const permissionNotification = async () => {
           });
           
           // menampilkan push subscription
-          console.log(`[PushManager]: enpoint: ${subsctription.endpoint}`);
-          console.log(`[PushManager]: p256dh key: ${uInt8ArrayToStr(subsctription.getKey('p256dh'))}`);
-          console.log(`[PushManager]: auth key: ${uInt8ArrayToStr(subsctription.getKey('auth'))}`);
+          console.log(`[Push Manager]: enpoint: ${subsctription.endpoint}`);
+          console.log(`[Push Manager]: p256dh key: ${uInt8ArrayToStr(subsctription.getKey('p256dh'))}`);
+          console.log(`[Push Manager]: auth key: ${uInt8ArrayToStr(subsctription.getKey('auth'))}`);
 
         } catch (error) {
-          console.log(`[PushManager]: error ${error}`);
+          console.error(`[Push Manager]: ${error}`);
         }
       }
     }

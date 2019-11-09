@@ -1,3 +1,9 @@
+@import '_vector.css';
+
+body {
+  background: rgb(248, 248, 250);
+}
+
 #loading {
   position: fixed;
   z-index: 999;
@@ -9,4 +15,39 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#topbar {
+  box-shadow: 0 1px 4px 0px rgba(0, 0, 255, .05) !important; 
+}
+
+.page-title {
+  margin: 2rem;
+}
+
+/* index */
+.standing {
+  border: none !important;
+  overflow: unset;
+}
+.standing-item {
+  border-radius: 5px;
+  box-shadow: 0 1px 4px 0px rgba(0, 0, 255, .05);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+.standing-item-uncircle {
+  border-radius: 0;
+  max-width: 40px;
+  max-height: 55px;
+  width: unset !important;
+  height: unset !important;
+}
+
+
+@media screen and (max-width: 425px) {
+  .page-title {
+    margin: 1rem;
+  }
 }

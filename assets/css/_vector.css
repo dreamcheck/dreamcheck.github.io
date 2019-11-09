@@ -1,0 +1,70 @@
+.background-vector {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.vector1 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 25%;
+}
+.vector2 {
+  position: absolute;
+  top: -2rem;
+  right: 0;
+  width: 10%;
+}
+.vector3 {
+  position: absolute;
+  top: 65%;
+  right: 30%;
+  width: 10%;
+}
+.vector4 {
+  position: absolute;
+  top: 18%;
+  left: 32%;
+  width: 5%;
+}
+
+@media screen and (max-width:425px) {
+  .vector1 {
+    width: 45%;
+  }
+  .vector2 {
+    width: 35%;
+  }
+  .vector3 {
+    top: 58%;
+    right: 15%;
+    width: 20%;
+  }
+  .vector4 {
+    top: 22%;
+    left: 18%;
+    width: 15%;
+  }
+}
+
+@media screen and (max-width:768px) {
+  .vector1 {
+    width: 35%;
+  }
+  .vector2 {
+    width: 20%;
+  }
+  .vector3 {
+    top: 58%;
+    right: 15%;
+    width: 20%;
+  }
+  .vector4 {
+    top: 15%;
+    left: 18%;
+    width: 15%;
+  }
+}

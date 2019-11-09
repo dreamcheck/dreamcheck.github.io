@@ -18,34 +18,46 @@ const database = async () => {
   }
   // membuat indexedDB dalam bentuk promise
   return await idb.open(DB_NAME, DB_VERSION, createObjectStore);
-} 
+}
 
 // insert data baru 
 const dbDataCreate = async ({ objectStore = OBJECT_STORE_NAME , payload }) => {
-  const db = await database();
-  const transaction = db.transaction(objectStore, 'readwrite');
-  const store = transaction.objectStore(objectStore);
-  store.add(payload);
-  console.log(`[IndexedDB]: menambah data '${objectStore}'`);
-  return transaction.complete;
+  try {
+    const db = await database();
+    const transaction = db.transaction(objectStore, 'readwrite');
+    const store = transaction.objectStore(objectStore);
+    store.add(payload);
+    console.log(`[IndexedDB]: menambah data '${objectStore}'`);
+    return transaction.complete;
+  } catch (error) {
+    console.error(`[IndexedDB]: ${error}`);
+  }
 }
 
 // hapus data
 const dbDataDelete = async ({ objectStore = OBJECT_STORE_NAME, keyPath }) => {
-  const db = await database();
-  const transaction = db.transaction(objectStore, 'readwrite');
-  const store = transaction.objectStore(objectStore);
-  store.delete(keyPath) // tipe data keyPath harus sama
-  console.log(`[IndexedDB]: manghapus data: '${objectStore}' dengan keyPath: ${keyPath}`);
-  return transaction.complete;
+  try {    
+    const db = await database();
+    const transaction = db.transaction(objectStore, 'readwrite');
+    const store = transaction.objectStore(objectStore);
+    store.delete(keyPath) // tipe data keyPath harus sama
+    console.log(`[IndexedDB]: manghapus data: '${objectStore}' dengan keyPath: ${keyPath}`);
+    return transaction.complete;
+  } catch (error) {
+    console.error(`[IndexedDB]: ${error}`);
+  }
 };
 
 // read data
 const dbDataRead = async ({ objectStore = OBJECT_STORE_NAME, keyPath = '' }) => {
-  const db = await database();
-  const transaction = db.transaction(objectStore, 'readonly');
-  let store = transaction.objectStore(objectStore);
-  if (keyPath)
-    return await store.get(keyPath);
-  return await store.getAll();
+  try {
+    const db = await database();
+    const transaction = db.transaction(objectStore, 'readonly');
+    let store = transaction.objectStore(objectStore);
+    if (keyPath)
+      return await store.get(keyPath);
+    return await store.getAll();
+  } catch (error) {
+    console.error(`[IndexedDB]: ${error}`);
+  }
 };
