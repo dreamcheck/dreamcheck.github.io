@@ -18,6 +18,7 @@ const OFFILE_ASSETS = [
   '/assets/js/indexed-db.js',
   '/assets/js/notification.js',
   '/assets/js/loading.js',
+  '/assets/js/component-error.js',
   '/vendor/css/materialize.min.css',
   '/vendor/js/materialize.min.js',
   '/vendor/js/idb.js',

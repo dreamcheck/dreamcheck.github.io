@@ -73,6 +73,7 @@
   <script src="./assets/js/register-sw.js"></script>
   <script src="./assets/js/notification.js"></script>
   <script src="./assets/js/loading.js"></script>
+  <script src="./assets/js/component-error.js"></script>
   <script>
 
     const setupTeam = async () => {
@@ -93,29 +94,8 @@
           </div>
         `;
       } catch (error) {
-        if (!navigator.onLine) {
-          contentHTML = `
-            <div class="network-error">
-              <h4 class="center-align">Anda sedang offline</h4>
-              <br>
-              <img class="responsive-img" src="/assets/img/img/undraw_warning_cyit.svg" alt="offline"/>
-              <br>
-              <p class="grey-text darken-4 center-align">
-                Pastikan anda terhubung internet lalu refresh halaman
-              <p>
-            </div>`;
-        } else {
-          contentHTML = `
-            <div class="network-error">
-              <h4 class="center-align">Server gangguan</h4>
-              <br>
-              <img class="responsive-img" src="/assets/img/img/undraw_server_down_s4lk.svg" alt="offline"/>
-              <br>
-              <p class="grey-text darken-4 center-align">
-                Mohon maaf atas kesalahan ini, silahkan coba akses halaman ini nanti
-              <p>
-            </div>`;
-        }
+        // fungsi dari component-error.js
+        contentHTML = (!navigator.onLine ? offlinePage() : serverErrorPage());
       } finally {
         // get view
         contentDOM.innerHTML = contentHTML;
