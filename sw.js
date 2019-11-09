@@ -9,6 +9,7 @@ const OFFILE_ASSETS = [
   '/assets/js/navbar.js',
   '/assets/js/register-sw.js',
   '/assets/js/indexed-db.js',
+  '/assets/js/notification.js',
   '/assets/js/loading.js',
   '/vendor/css/materialize.min.css',
   '/vendor/js/materialize.min.js',
@@ -86,3 +87,26 @@ self.addEventListener('fetch', event => {
       : checkOnCache()
   );
 });
+
+// event push
+self.addEventListener('push', event => {
+  let body = 'Push manager have no message';
+  if (event.data) 
+    body = event.data.text();
+
+  // mengatur notifikasi
+  const options = {
+    body,
+    icon: '/assets/img/icon/iconfinder_Soccer_512x512.png',
+    vibrate: [100, 50, 50],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: 1,
+    },
+  };
+
+  event.waitUntil(
+    // menampilkan notifikasi
+    self.registration.showNotification('EPL Notification', options)
+  );
+})

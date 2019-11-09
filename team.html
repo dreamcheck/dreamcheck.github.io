@@ -64,6 +64,7 @@
   <script src="./assets/js/api.js"></script>
   <script src="./assets/js/indexed-db.js"></script>
   <script src="./assets/js/register-sw.js"></script>
+  <script src="./assets/js/notification.js"></script>
   <script src="./assets/js/loading.js"></script>
   <script>
 
@@ -125,6 +126,7 @@
       await loading(true);
       await setupTeam();
       await loading(false);
+      permissionNotification(); // request notifikasi
     };
 
     // fungsi berasal dari register-sw.js

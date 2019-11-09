@@ -68,6 +68,7 @@
   <script src="./assets/js/navbar.js"></script> 
   <script src="./assets/js/api.js"></script>
   <script src="./assets/js/register-sw.js"></script>
+  <script src="./assets/js/notification.js"></script>
   <script src="./assets/js/loading.js"></script>
   <script>
     const setupKlasemen = async () => {
@@ -106,6 +107,7 @@
       await loading(true);
       await setupKlasemen();
       await loading(false);
+      permissionNotification(); // request notifikasi
     };
 
     // fungsi berasal dari register-sw.js
