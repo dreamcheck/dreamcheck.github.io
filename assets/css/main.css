@@ -1,4 +1,5 @@
 @import '_vector.css';
+@import '_error.css';
 
 body {
   background: rgb(248, 248, 250);

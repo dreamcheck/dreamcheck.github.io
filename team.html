@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Web sepak bola</title>
+  <title>English Premiere League</title>
   <link rel="stylesheet" href="./vendor/css/materialize.min.css">
   <link rel="stylesheet" href="./assets/css/main.css">
   <link rel="manifest" href="./manifest.json">
@@ -93,11 +93,29 @@
           </div>
         `;
       } catch (error) {
-        contentHTML = `
-          <div>
-            <h3>tidak tidak dapat memuat halaman</h3>  
-          </div>
-        `;
+        if (!navigator.onLine) {
+          contentHTML = `
+            <div class="network-error">
+              <h4 class="center-align">Anda sedang offline</h4>
+              <br>
+              <img class="responsive-img" src="/assets/img/img/undraw_warning_cyit.svg" alt="offline"/>
+              <br>
+              <p class="grey-text darken-4 center-align">
+                Pastikan anda terhubung internet lalu refresh halaman
+              <p>
+            </div>`;
+        } else {
+          contentHTML = `
+            <div class="network-error">
+              <h4 class="center-align">Server gangguan</h4>
+              <br>
+              <img class="responsive-img" src="/assets/img/img/undraw_server_down_s4lk.svg" alt="offline"/>
+              <br>
+              <p class="grey-text darken-4 center-align">
+                Mohon maaf atas kesalahan ini, silahkan coba akses halaman ini nanti
+              <p>
+            </div>`;
+        }
       } finally {
         // get view
         contentDOM.innerHTML = contentHTML;

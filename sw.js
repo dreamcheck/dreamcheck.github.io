@@ -4,8 +4,11 @@ const CACHE_NAME = 'football-app';
 const OFFILE_ASSETS = [
   '/assets/css/main.css',
   '/assets/css/_vector.css',
+  '/assets/css/_error.css',
   '/assets/img/icon/iconfinder_Soccer_512x512.png',
   '/assets/img/icon/iconfinder_Soccer_192x192.png',
+  '/assets/img/img/undraw_server_down_s4lk.svg',
+  '/assets/img/img/undraw_warning_cyit.svg',
   '/assets/img/vector/ellipse1.svg',
   '/assets/img/vector/ellipse2.svg',
   '/assets/img/vector/ellipse3.svg',
