@@ -3,6 +3,8 @@
 const CACHE_NAME = 'football-app';
 const OFFILE_ASSETS = [
   '/assets/css/main.css',
+  '/assets/img/icon/iconfinder_Soccer_512x512.png',
+  '/assets/img/icon/iconfinder_Soccer_192x192.png',
   '/assets/js/api.js',
   '/assets/js/navbar.js',
   '/assets/js/register-sw.js',
@@ -10,6 +12,7 @@ const OFFILE_ASSETS = [
   '/vendor/css/materialize.min.css',
   '/vendor/js/materialize.min.js',
   '/vendor/js/idb.js',
+  '/manifest.json',
   '/index.html',
   '/team.html',
   '/',
@@ -23,6 +26,10 @@ self.addEventListener('install', event => {
     const cache = await caches.open(CACHE_NAME);
     return cache.addAll(OFFILE_ASSETS);
   };
+  
+  // selalu menggunakan file service worker terbaru
+  self.skipWaiting();
+  
   event.waitUntil(preCache());
 });
 

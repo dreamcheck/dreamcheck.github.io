@@ -7,6 +7,7 @@
   <title>Web sepak bola</title>
   <link rel="stylesheet" href="./vendor/css/materialize.min.css">
   <link rel="stylesheet" href="./assets/css/main.css">
+  <link rel="manifest" href="./manifest.json">
 </head>
 <body>
 
@@ -69,8 +70,8 @@
 
     // mengatur agar menjadi tim terfavorit user (hanya 1)
     const setAsMyTeam = async id => {
-      await dbDataCreate({ objectStore: 'my_team', payload: await getTeam(id) });
-      console.log(await dbDataRead({ objectStore: 'my_team' }));
+      // await dbDataCreate({ objectStore: 'my_team', payload: await getTeam(id) });
+      console.log(await dbDataRead({ objectStore: 'my_team', keyPath: 64 }));
       // dbDataDelete({ objectStore: 'my_team', keyPath: id });
     }
 
