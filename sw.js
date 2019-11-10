@@ -11,6 +11,7 @@ const OFFILE_ASSETS = [
   '/assets/img/icon/iconfinder_Soccer_192x192.png',
   '/assets/img/img/undraw_server_down_s4lk.svg',
   '/assets/img/img/undraw_warning_cyit.svg',
+  '/assets/img/img/undraw_Choose_bwbs.svg',
   '/assets/img/vector/ellipse1.svg',
   '/assets/img/vector/ellipse2.svg',
   '/assets/img/vector/ellipse3.svg',
@@ -28,6 +29,7 @@ const OFFILE_ASSETS = [
   '/manifest.json',
   '/index.html',
   '/team.html',
+  '/myteam.html',
   '/',
 ];
 

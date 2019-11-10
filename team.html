@@ -41,14 +41,14 @@
       <ul class="topnav right hide-on-med-and-down">
         <li><a href="/" class="waves-effect black-text">Standing</a></li>
         <li><a href="" class="waves-effect black-text">Schedule</a></li>
-        <li><a href="" class="waves-effect black-text">My Team</a></li>
+        <li><a href="./myteam.html" class="waves-effect black-text">My Team</a></li>
       </ul>
       
       <!-- sidenav -->
       <ul class="sidenav" id="mobile-nav">
         <li><a href="/" class="waves-effect black-text">Standing</a></li>
         <li><a href="#" class="waves-effect black-text">Schedule</a></li>
-        <li><a href="#" class="waves-effect black-text">My Team</a></li>
+        <li><a href="./myteam.html" class="waves-effect black-text">My Team</a></li>
       </ul>
     </div>
   </nav>
@@ -209,7 +209,7 @@
 
     };
 
-    // mengatur agar menjadi tim terfavorit user (hanya 1)
+    // mengatur agar menjadi tim terfavorit user (hanya boleh ada 1)
     const setAsMyTeam = async id => {
       
       let teamExist = false;
@@ -230,11 +230,14 @@
       // memasukkan data baru jika data belum ada
       if (!teamExist) {
         try {
-          await dbDataCreate({ objectStore: 'my_team', payload: await getTeam(id) })
+          await dbDataCreate({ objectStore: 'my_team', payload: {
+            matches: await getTeamMatches(id, { status: 'SCHEDULED' }),
+            ...(await getTeam(id)),
+          }});
           await init(); // refresh halaman
           M.toast({html: 'This team is my team now'});
         } catch (error) {
-          M.toast({html: 'Set as my team failed'});
+          M.toast({html: 'Set my team failed'});
           console.error(error);
         }
       }  
@@ -251,7 +254,6 @@
       
       permissionNotification(); // request notifikasi
     };
-
 
 
     // fungsi berasal dari register-sw.js
