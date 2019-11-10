@@ -68,3 +68,7 @@ const getTeam = async (teamId) => getRequest(`${BASE_URL}/teams/${teamId}`);
 // get match per team
 const getTeamMatches = async (teamId, queryParams = null) => 
   getRequest(`${BASE_URL}/teams/${teamId}/matches`, queryParams);
+
+// get competition matches
+const getCompetitionMatches = async (queryParams = null) => 
+  getRequest(`${BASE_URL}/competitions/PL/matches`, queryParams); 

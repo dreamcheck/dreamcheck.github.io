@@ -54,6 +54,7 @@ const dbDataRead = async ({ objectStore = OBJECT_STORE_NAME, keyPath = '' }) => 
     const db = await database();
     const transaction = db.transaction(objectStore, 'readonly');
     let store = transaction.objectStore(objectStore);
+    console.log('[IndexedDB]: read data');
     if (keyPath)
       return store.get(keyPath);
     return store.getAll();

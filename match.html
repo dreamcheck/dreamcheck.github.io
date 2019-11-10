@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>English Premier League</title>
+  <link rel="stylesheet" href="./vendor/css/materialize.min.css">
+  <link rel="stylesheet" href="./assets/css/main.css">
+  <link rel="manifest" href="./manifest.json">
+</head>
+<body>
+
+  <!-- loading -->
+  <div id="loading">
+    <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue-only">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- loading -->
+
+  <!-- navbar -->
+  <nav id="topbar" class="white z-depth-0 nav-component">
+    <div class="nav-wrapper container">
+      <a href="/" class="brand-logo black-text" id="logo">
+        EPL
+      </a>
+      <a href="#" style="font-size:2rem" class="sidenav-trigger black-text" data-target="mobile-nav">
+        ☰
+      </a>
+
+      <!-- topnav -->
+      <ul class="topnav right hide-on-med-and-down">
+        <li><a href="/" class="waves-effect black-text">Standing</a></li>
+        <li><a href="./match.html" class="waves-effect black-text">Matches</a></li>
+        <li><a href="./myteam.html" class="waves-effect black-text">My Team</a></li>
+      </ul>
+      
+      <!-- sidenav -->
+      <ul class="sidenav" id="mobile-nav">
+        <li><a href="/" class="waves-effect black-text">Standing</a></li>
+        <li><a href="./match.html" class="waves-effect black-text">Matches</a></li>
+        <li><a href="./myteam.html" class="waves-effect black-text">My Team</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- navbar -->
+
+  <!-- content -->
+  <div class="container" id="content">
+    
+    <br>
+    <h5 class="page-title center-align">
+      Matches
+    </h5>
+    <br>
+
+    <!-- matchday selector -->
+    <h6 class="center-align">Select Matchday</h6><br>
+    <div class="row matchday-selector"></div>
+
+    <!-- select matchday -->
+    <br><br>
+    <div class="matches"></div>
+    <br>
+  </div>
+
+  <div class="background-vector">
+    <img class="vector1" src="./assets/img/vector/ellipse1.svg">
+    <img class="vector2" src="./assets/img/vector/ellipse2.svg">
+    <img class="vector3" src="./assets/img/vector/ellipse3.svg">
+    <img class="vector4" src="./assets/img/vector/ellipse3.svg">
+  </div>
+
+
+  <script src="./vendor/js/materialize.min.js"></script>
+  <script src="./assets/js/navbar.js"></script> 
+  <script src="./assets/js/api.js"></script>
+  <script src="./assets/js/register-sw.js"></script>
+  <script src="./assets/js/notification.js"></script>
+  <script src="./assets/js/loading.js"></script>
+  <script src="./assets/js/component-error.js"></script>
+  <script>
+
+    const matchStatusColor = {
+      SCHEDULED: 'purple',  
+      LIVE: 'blue',
+      IN_PLAY: 'light-blue',
+      PAUSED: 'brown',
+      FINISHED: 'deep-orange',
+      POSTPONED: 'pink',
+      SUSPENDED: 'orange',
+      CANCELED: 'red',
+    }
+
+    const setupMatches = async (matchday = '') => {
+      await loading(true);
+
+      // get matchday param di url
+      const urlParams = new URLSearchParams(location.search);
+      
+      // setting matchday
+      matchday = matchday || urlParams.get('matchday') || 1;
+
+      // change url search param 
+      history.pushState('', `Matchday ${matchday}`, `?matchday=${matchday}`);
+
+      // matchday selector dom
+      const matchdaySelectorDOM = document.querySelector('#content .matchday-selector');
+      matchdaySelectorDOM.innerHTML = ''; // kosongkan dulu
+      
+      // content 
+      const contentDOM = document.querySelector('#content .matches');
+      let contentHTML = '';
+
+      try {
+        const data = await getCompetitionMatches({ matchday });
+        const totalMatchday = 38;
+
+        // selector matchday
+        for (let i=1; i <= totalMatchday; i++) {
+          matchdaySelectorDOM.innerHTML += `
+            <div class="col s3 m1">
+              <div class="match-selector-item ${matchday == i ? 'blue lighten-2 white-text' : 'white grey-text'}  center-align"
+                style="cursor:pointer"
+                onclick="setupMatches(${i})"
+                >
+                ${i}
+              </div>
+            </div>
+          `;
+        }
+
+        // pertandingan 
+        contentHTML += `
+          <h6 class="center-align">Matchday ${matchday}</h6><br>
+          <ul class="collection standing">
+            ${// pertantingan di matchday ke-i
+              data.matches.map(match => {
+                if (match.matchday == matchday) {
+                  return (
+                    `<li
+                      class="collection-item match-item"
+                      style="margin: 1rem 0; width: 100%; padding: 1rem"
+                      >
+                      <div class="match-item-team">
+                        <div class="match-item-score">
+                          <span>${match.homeTeam.name}</span>  
+                          <span class="${match.score.winner == 'HOME_TEAM' ? 'blue-text text-lighten-2' : ''}">
+                            ${
+                              typeof match.score.fullTime.homeTeam === 'number' 
+                              ? match.score.fullTime.homeTeam 
+                              : ''
+                            }
+                          </span>
+                        </div>
+                        <div class="match-item-score">
+                          <span>${match.awayTeam.name}</span>
+                          <span class="${match.score.winner == 'AWAY_TEAM' ? 'blue-text text-lighten-2' : ''}">
+                            ${
+                              typeof match.score.fullTime.awayTeam === 'number' 
+                              ? match.score.fullTime.awayTeam 
+                              : ''
+                            }
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <hr class="match-item-hr">
+                      <span class="grey-text">
+                        Date ${new Date(match.utcDate).toLocaleDateString()}<br>
+                        Time ${new Date(match.utcDate).toLocaleTimeString()}
+                      </span><br>
+                      <div class="${matchStatusColor[match.status] || 'black'} lighten-2 center-align match-status">
+                        ${match.status.replace('_', ' ')}
+                      </div>
+                    </li>`
+                  );
+                }
+              }).join('')
+            }  
+          </ul>`;
+      } catch (error) {
+        // fungsi dari component-error.js
+        contentHTML = (!navigator.onLine ? offlinePage() : serverErrorPage());
+        console.error(`[Fetch]: ${error}`);
+      } finally {
+        contentDOM.innerHTML = contentHTML;
+        await loading(false);
+      }
+    }
+
+    // semua fungsi saat load dijalankan disini
+    const init = async () => {
+      await setupMatches();
+      permissionNotification(); // request notifikasi
+    };
+
+    // fungsi berasal dari register-sw.js
+    // menjalankan init() setelah service worker terdaftar
+    registerServiceWorker(init);
+  </script>
+</body>
+</html>

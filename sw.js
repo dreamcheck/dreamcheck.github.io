@@ -7,6 +7,7 @@ const OFFILE_ASSETS = [
   '/assets/css/_error.css',
   '/assets/css/_page_index.css',
   '/assets/css/_page_team.css',
+  '/assets/css/_page_match.css',
   '/assets/img/icon/iconfinder_Soccer_512x512.png',
   '/assets/img/icon/iconfinder_Soccer_192x192.png',
   '/assets/img/img/undraw_server_down_s4lk.svg',
@@ -30,6 +31,7 @@ const OFFILE_ASSETS = [
   '/index.html',
   '/team.html',
   '/myteam.html',
+  '/match.html',
   '/',
 ];
 
