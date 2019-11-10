@@ -1,0 +1,38 @@
+.team-brand-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.team-brand-logo {
+  max-width: 10rem;
+}
+
+.team-horizon-line {
+  border: .5px solid #eee;
+  margin-bottom: 1rem;
+}
+
+.team-card-custom {
+  box-shadow: 0 1px 4px 0px rgba(0, 0, 255, .05);
+  border-radius: 5px;
+}
+
+.team-collapsible {
+  border-top: 1px solid rgba(238, 238, 238, 0.876) !important;
+  border-left: 1px solid rgba(238, 238, 238, 0.863) !important;
+  border-right: 1px solid rgba(238, 238, 238, 0.883) !important;
+}
+
+.team-collapsible-header {
+  border-bottom: 1px solid rgba(238, 238, 238, 0.876) !important;
+}
+
+.team-collapsible-body {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 425px) {
+}

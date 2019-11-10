@@ -39,15 +39,15 @@
 
       <!-- topnav -->
       <ul class="topnav right hide-on-med-and-down">
-        <li><a href="/" class="waves-effect black-text">Klasemen</a></li>
-        <li><a href="" class="waves-effect black-text">Jadwal</a></li>
+        <li><a href="/" class="waves-effect black-text">Standing</a></li>
+        <li><a href="" class="waves-effect black-text">Schedule</a></li>
         <li><a href="" class="waves-effect black-text">My Team</a></li>
       </ul>
       
       <!-- sidenav -->
       <ul class="sidenav" id="mobile-nav">
-        <li><a href="/" class="waves-effect black-text">Klasemen</a></li>
-        <li><a href="#" class="waves-effect black-text">Jadwal</a></li>
+        <li><a href="/" class="waves-effect black-text">Standing</a></li>
+        <li><a href="#" class="waves-effect black-text">Schedule</a></li>
         <li><a href="#" class="waves-effect black-text">My Team</a></li>
       </ul>
     </div>
@@ -85,17 +85,118 @@
         const urlParams = new URLSearchParams(location.search);
         const teamId = urlParams.get('id');
         const teamInfo = await getTeam(teamId);
-        const teamMatches = await getTeamMatches(teamId);
+        const teamMatches = await getTeamMatches(teamId, { status: 'SCHEDULED' });
+        const myTeam = await dbDataRead({ objectStore: 'my_team', keyPath: teamInfo.id });
         contentHTML = `
-          <div>
-            <h3>${teamInfo.name}</h3>
-            <img class="responsive-img" alt="logo" src="${teamInfo.crestUrl}"/> 
-            <button onclick="setAsMyTeam(${teamInfo.id})">Set as my team</button>
+          <div class="team">
+            <div class="team-brand-section">
+              <br>
+              <h5 class="center-align page-title">${teamInfo.name}</h5>
+              <br>
+              <img class="team-brand-logo" alt="logo" src="${teamInfo.crestUrl}"/>
+              <br>
+              <p class="center-align grey-text darken-4">${teamInfo.address}<br>${teamInfo.area.name}</p>
+              ${!myTeam 
+                ? `<br>
+                  <button 
+                    class="blue lighten-2 z-depth-0 waves-effect waves-light btn" 
+                    onclick="setAsMyTeam(${teamInfo.id})"
+                    >
+                    Set as my team
+                  </button>
+                  <br>` 
+                : '<h6 class="grey-text">This is My Team</h6>'}
+              <br>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <div class="card white team-card-custom">
+                  <div class="card-content black-text">
+                    <span class="card-title">Basic Info</span>
+                    <hr class="team-horizon-line">
+                    <ul class="collapsible team-collapsible z-depth-0 grey-text darken-4">
+                      <li>
+                        <div class="collapsible-header team-collapsible-header">Stadium</div>
+                        <div class="collapsible-body team-collapsible-body"><span>${teamInfo.venue}</span></div>
+                      </li>
+                      <li>
+                        <div class="collapsible-header">Club Color</div>
+                        <div class="collapsible-body team-collapsible-body"><span>${teamInfo.clubColors}</span></div>
+                      </li>
+                      <li>
+                        <div class="collapsible-header">Address</div>
+                        <div class="collapsible-body team-collapsible-body"><span">${teamInfo.address}</span"></div>
+                      </li>
+                      ${teamInfo.email 
+                        ? `<li>
+                            <div class="collapsible-header">Email</div>
+                            <div class="collapsible-body team-collapsible-body"><span">${teamInfo.email}</span"></div>
+                          </li>`
+                        : ''}
+                      ${teamInfo.website
+                        ? `<li>
+                            <div class="collapsible-header">Website</div>
+                            <div class="collapsible-body team-collapsible-body"><span">${teamInfo.website}</span"></div>
+                          </li>`
+                        : ''
+                      }
+                    </ul>      
+                  </div>
+                </div>
+              </div>
+              <div class="col s12">
+                <div class="card white team-card-custom">
+                  <div class="card-content black-text">
+                    <span class="card-title">Competitions</span>
+                    <hr class="team-horizon-line">
+                    <p class="grey-text darken-4">
+                      <ul>
+                        ${teamInfo.activeCompetitions.map((competition, i) => {
+                          return `<li class="grey-text darken-4">${i+1}. ${competition.name}</li>`;
+                        }).join('')}  
+                      </ul>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col s12">
+                <div class="card white team-card-custom">
+                  <div class="card-content black-text">
+                    <span class="card-title">Next Match</span>
+                    <hr class="team-horizon-line">
+                    <p class="grey-text darken-4">
+                      <ul>
+                        ${teamMatches.matches.slice(0, 5).map((match, i) => {
+                          let vsTeam = '';
+                          let isAway = false;
+
+                          if (match.awayTeam.name == teamInfo.name) {
+                            vsTeam = match.homeTeam.name;
+                            isAway = true
+                          } else {
+                            vsTeam = match.awayTeam.name;
+                            isAway = false;
+                          }
+                          return `
+                            <li class="grey-text darken-4">
+                              ${i+1}. ${vsTeam}
+                              <ul>
+                                <li>${isAway ? 'Away' : 'Home'} </li>
+                              </ul>
+                            </li>`;
+                        }).join('')}  
+                      </ul>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         `;
       } catch (error) {
         // fungsi dari component-error.js
         contentHTML = (!navigator.onLine ? offlinePage() : serverErrorPage());
+        console.error(`[Fetch]: ${error}`);
       } finally {
         // get view
         contentDOM.innerHTML = contentHTML;
@@ -122,8 +223,16 @@
       });
       
       // memasukkan data baru jika data belum ada
-      !teamExist &&  
-        await dbDataCreate({ objectStore: 'my_team', payload: await getTeam(id) }) 
+      if (!teamExist) {
+        try {
+          await dbDataCreate({ objectStore: 'my_team', payload: await getTeam(id) })
+          await init(); // refresh halaman
+          M.toast({html: 'This team is my team now'});
+        } catch (error) {
+          M.toast({html: 'Set as my team failed'});
+          console.error(error);
+        }
+      }  
     }
 
     // semua fungsi saat load dijalankan disini
@@ -131,8 +240,14 @@
       await loading(true);
       await setupTeam();
       await loading(false);
+      
+      // materilaize component
+      M.Collapsible.init(document.querySelectorAll('.collapsible'));
+      
       permissionNotification(); // request notifikasi
     };
+
+
 
     // fungsi berasal dari register-sw.js
     // menjalankan init() setelah service worker terdaftar

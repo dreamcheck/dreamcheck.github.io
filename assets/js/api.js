@@ -10,7 +10,13 @@ const headers = {
 const safeUrl = url => url.replace(/^http:\/\//i, 'https://');
 
 // setting untuk GET request
-const getRequest = async (url) => {
+const getRequest = async (url, queryParams = null) => {
+
+  // jika menggunakan query params
+  if (queryParams) {
+    url = `${url}?${ new URLSearchParams(queryParams)}`;
+  } 
+
   url = safeUrl(url);
   try {
     // cek browser mendukung cache
@@ -60,4 +66,5 @@ const getKlasemen = async () => getRequest(`${BASE_URL}/competitions/PL/standing
 const getTeam = async (teamId) => getRequest(`${BASE_URL}/teams/${teamId}`);
 
 // get match per team
-const getTeamMatches = async (teamId) => getRequest(`${BASE_URL}/teams/${teamId}/matches`);
+const getTeamMatches = async (teamId, queryParams = null) => 
+  getRequest(`${BASE_URL}/teams/${teamId}/matches`, queryParams);

@@ -39,15 +39,15 @@
 
       <!-- topnav -->
       <ul class="topnav right hide-on-med-and-down">
-        <li><a href="/" class="waves-effect black-text">Klasemen</a></li>
-        <li><a href="" class="waves-effect black-text">Jadwal</a></li>
+        <li><a href="/" class="waves-effect black-text">Standing</a></li>
+        <li><a href="" class="waves-effect black-text">Schedule</a></li>
         <li><a href="" class="waves-effect black-text">My Team</a></li>
       </ul>
       
       <!-- sidenav -->
       <ul class="sidenav" id="mobile-nav">
-        <li><a href="/" class="waves-effect black-text">Klasemen</a></li>
-        <li><a href="#" class="waves-effect black-text">Jadwal</a></li>
+        <li><a href="/" class="waves-effect black-text">Standing</a></li>
+        <li><a href="#" class="waves-effect black-text">Schedule</a></li>
         <li><a href="#" class="waves-effect black-text">My Team</a></li>
       </ul>
     </div>
@@ -109,6 +109,7 @@
       } catch (error) {
         // fungsi dari component-error.js
         contentHTML = (!navigator.onLine ? offlinePage() : serverErrorPage());
+        console.error(`[Fetch]: ${error}`);
       } finally {
         contentDOM.innerHTML = contentHTML;
       }

@@ -1,0 +1,18 @@
+.standing {
+  border: none !important;
+  overflow: unset;
+}
+.standing-item {
+  border-radius: 5px;
+  box-shadow: 0 1px 4px 0px rgba(0, 0, 255, .05);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+.standing-item-uncircle {
+  border-radius: 0;
+  max-width: 40px;
+  max-height: 55px;
+  width: unset !important;
+  height: unset !important;
+}
