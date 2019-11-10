@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>English Premiere League</title>
+  <title>English Premier League</title>
   <link rel="stylesheet" href="./vendor/css/materialize.min.css">
   <link rel="stylesheet" href="./assets/css/main.css">
   <link rel="manifest" href="./manifest.json">
@@ -164,29 +164,34 @@
                   <div class="card-content black-text">
                     <span class="card-title">Next Match</span>
                     <hr class="team-horizon-line">
-                    <p class="grey-text darken-4">
-                      <ul>
-                        ${teamMatches.matches.slice(0, 5).map((match, i) => {
-                          let vsTeam = '';
-                          let isAway = false;
+                    <ul class="collapsible team-collapsible z-depth-0 grey-text darken-4">
+                      ${(teamMatches.matches.slice(0, 5)).map((match, i) => {
+                        let vsTeam = '';
+                        let isAway = false;
 
-                          if (match.awayTeam.name == teamInfo.name) {
-                            vsTeam = match.homeTeam.name;
-                            isAway = true
-                          } else {
-                            vsTeam = match.awayTeam.name;
-                            isAway = false;
-                          }
-                          return `
-                            <li class="grey-text darken-4">
-                              ${i+1}. ${vsTeam}
-                              <ul>
-                                <li>${isAway ? 'Away' : 'Home'} </li>
-                              </ul>
-                            </li>`;
-                        }).join('')}  
-                      </ul>
-                    </p>
+                        if (match.awayTeam.name == teamInfo.name) {
+                          vsTeam = match.homeTeam.name;
+                          isAway = true
+                        } else {
+                          vsTeam = match.awayTeam.name;
+                          isAway = false;
+                        }
+                        
+                        return (
+                          `<li class="${i == 0 ? 'active' : ''}">
+                            <div class="collapsible-header">${vsTeam}</div>
+                            <div class="collapsible-body team-collapsible-body">
+                              <span">
+                                - ${match.competition.name} <br>
+                                - ${isAway ? 'Away' : 'Home'} Match <br>
+                                - Matchday ${match.matchday} <br>
+                                - Date ${new Date(match.utcDate).toLocaleDateString()} <br>
+                                - Time ${new Date(match.utcDate).toLocaleTimeString()}
+                              </span">
+                            </div>
+                          </li>`);
+                      }).join('')}
+                    </ul>
                   </div>
                 </div>
               </div>

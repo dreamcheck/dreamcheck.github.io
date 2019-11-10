@@ -9,15 +9,15 @@ const errorPage = ({ title, text, imgPath}) => `
 
 // ketika user offline
 const offlinePage = () => errorPage({
-  title: 'Anda sedang offline',
-  text: 'Pastikan anda terhubung internet lalu refresh halaman',
+  title: `You're offline`,
+  text: 'Ensure you connected to internet, then refresh the page',
   imgPath: '/assets/img/img/undraw_warning_cyit.svg',
 });
 
 // ketika server error
 const serverErrorPage = () => errorPage({
-  title: 'Server gangguan',
-  text: 'Mohon maaf atas kesalahan ini, silahkan coba akses halaman ini nanti',
+  title: 'Server Error',
+  text: 'Sorry for this error, please try again later',
   imgPath: '/assets/img/img/undraw_server_down_s4lk.svg',
 });
 
