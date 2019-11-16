@@ -30,11 +30,11 @@ if (workbox) {
   const revision = '1';
   workbox.precaching.precacheAndRoute([
     // assets css
-    { url: '/assets/css/_error.css', revision },
-    { url: '/assets/css/_page_index.css', revision },
-    { url: '/assets/css/_page_match.css', revision },
-    { url: '/assets/css/_page_team.css', revision },
-    { url: '/assets/css/_vector.css', revision },
+    { url: '/assets/css/error.css', revision },
+    { url: '/assets/css/page_index.css', revision },
+    { url: '/assets/css/page_match.css', revision },
+    { url: '/assets/css/page_team.css', revision },
+    { url: '/assets/css/vector.css', revision },
     { url: '/assets/css/main.css', revision },
 
     // assets image
