@@ -1,4 +1,6 @@
 // file service worker
+
+// menggunakan workbox
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
 
 // memeriksa ketersediaan workbox
@@ -80,6 +82,13 @@ if (workbox) {
     new RegExp('https://api.football-data.org/v2'),
     new workbox.strategies.StaleWhileRevalidate({
       cacheName: 'api',
+      plugins: [
+        new workbox.expiration.Plugin({
+          maxEntries: 50, // jumlah cache list
+          maxAgeSeconds: 60 * 60 * 24 * 30, // 30 hari
+          purgeOnQuotaError: true, // hapus cache jika sudah melebihi quota
+        }),
+      ],
     })
   );
 

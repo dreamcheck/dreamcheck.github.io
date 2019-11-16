@@ -2,10 +2,10 @@ const webPush = require('web-push');
 
 // Properti push subscription bisa diganti sesuai client 
 const pushSubscription = {
-  endpoint: 'https://fcm.googleapis.com/fcm/send/e3krWPDwcgA:APA91bELheLcyTaLB8kZg9Z4TRw5ncTuKnTmIikY6ERVLF7Q3xEtmIbwaX4a-FueioUj_Z5b3OlW8aJxZYmoiFeDpQXQJIMUnw_rK80pbzk_Rrz8jTxoFy-O05Uu88xm3RH56yC8i-DX',
+  endpoint: 'https://fcm.googleapis.com/fcm/send/cnH7LYJgSns:APA91bGX4ZFDClAewAg607gCw4cLS5x7O_dUlNNL3hF5lNBhc2yviMBEOwp0fuKp2w0LyTnQL2GgAeX762hEl6x1xEtW0luUxz3UXI63HXtiX7UpRvcxMQRa8Av922rEng4FJnJo_bRd',
   keys: {
-    p256dh: 'BMnjbyd63wMw34jIRNzf+15ho9DgPe+aqVEl5213RTK4Pma/xRf20FGZ1vBAtJfE/0WoRfxa1SpOZh4PjRmM+q8=',
-    auth: 'BIdDOhXRrV695mc3SZtk0w==',
+    p256dh: 'BGpHnSwCg3fPWOKjCdANSHB7bNyeQJUlj4Z97xL48xIYdbNrIRJVLq/qBnH6lyqHRiKq7swcBndAGuUHA2OXF84=',
+    auth: 'oH2hubsL5Avoij+6SrYYrw==',
   },
 };
 
