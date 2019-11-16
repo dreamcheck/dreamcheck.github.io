@@ -1,8 +1,14 @@
-@import url('_vector.css');
+/*@import url('_vector.css');
 @import url('_error.css');
 @import url('_page_index.css');
 @import url('_page_team.css');
-@import url('_page_match.css');
+@import url('_page_match.css');*/
+
+@import url('https://dreamcheck.github.io/assets/css/_vector.css');
+@import url('https://dreamcheck.github.io/assets/css/_error.css');
+@import url('https://dreamcheck.github.io/assets/css/_page_index.css');
+@import url('https://dreamcheck.github.io/assets/css/_page_team.css');
+@import url('https://dreamcheck.github.io/assets/css/_page_match.css');
 
 body {
   background: rgb(248, 248, 250);
