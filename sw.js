@@ -1,107 +1,90 @@
 // file service worker
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
 
-const CACHE_NAME = 'football-app';
-const OFFILE_ASSETS = [
-  '/assets/css/main.css',
-  '/assets/css/_vector.css',
-  '/assets/css/_error.css',
-  '/assets/css/_page_index.css',
-  '/assets/css/_page_team.css',
-  '/assets/css/_page_match.css',
-  '/assets/img/icon/iconfinder_Soccer_512x512.png',
-  '/assets/img/icon/iconfinder_Soccer_192x192.png',
-  '/assets/img/img/undraw_server_down_s4lk.svg',
-  '/assets/img/img/undraw_warning_cyit.svg',
-  '/assets/img/img/undraw_Choose_bwbs.svg',
-  '/assets/img/vector/ellipse1.svg',
-  '/assets/img/vector/ellipse2.svg',
-  '/assets/img/vector/ellipse3.svg',
-  '/assets/js/api.js',
-  '/assets/js/navbar.js',
-  '/assets/js/register-sw.js',
-  '/assets/js/indexed-db.js',
-  '/assets/js/notification.js',
-  '/assets/js/loading.js',
-  '/assets/js/component-error.js',
-  '/vendor/css/materialize.min.css',
-  '/vendor/js/materialize.min.js',
-  '/vendor/js/idb.js',
-  '/favicon.ico',
-  '/manifest.json',
-  '/index.html',
-  '/team.html',
-  '/myteam.html',
-  '/match.html',
-  '/',
-];
+// memeriksa ketersediaan workbox
+if (workbox) {
+  console.log(`[Workbox]: Workbox tersedia`);
 
-// event install
-self.addEventListener('install', event => {
-  
-  // cache semua offline asset yang diperlukan
-  const preCache = async () => {
-    const cache = await caches.open(CACHE_NAME);
-    return cache.addAll(OFFILE_ASSETS);
-  };
-  
-  console.log('[Service Worker]: event install');
-  event.waitUntil(preCache());
+  // debug mode
+  workbox.setConfig({
+    debug: false,
+  });
 
-  // selalu menggunakan service worker versi terbaru
-  self.skipWaiting();
-});
+  // menggunakan sw versi terbaru
+  workbox.core.skipWaiting();
 
-// event active
-self.addEventListener('activate', event => {
-  
-  // menghapus chache lain agar tidak banyak memakan storage
-  const deleteOtherCache = async () => {
-    const cacheNames = await caches.keys();
-    return Promise.all(
-      cacheNames.map(cacheName => {
-        if (cacheName != CACHE_NAME) {
-          console.log(`[Service Worker]: hapus cache '${cacheName}'`);  
-          return caches.delete(cacheName);
-        }
-      })
-    );
-  };
+  // menggunakan sw sesegera mungkin
+  workbox.core.clientsClaim();
 
-  console.log('[Service Worker]: event activate');
-  event.waitUntil(Promise.all([
-    deleteOtherCache(),
-    clients.claim(),
-  ]));
-});
+  // mengatur nama cache
+  workbox.core.setCacheNameDetails({
+    prefix: 'football',
+    suffix: 'v1',
+    precache: 'precache',
+    runtime: 'runtime',
+  });
 
-// event fetch
-self.addEventListener('fetch', event => {
-  const BASE_URL = 'https://api.football-data.org/v2';
+  // mengatur file precaching
+  const revision = '1';
+  workbox.precaching.precacheAndRoute([
+    // assets css
+    { url: '/assets/css/_error.css', revision },
+    { url: '/assets/css/_page_index.css', revision },
+    { url: '/assets/css/_page_match.css', revision },
+    { url: '/assets/css/_page_team.css', revision },
+    { url: '/assets/css/_vector.css', revision },
+    { url: '/assets/css/main.css', revision },
 
-  // ganti http dengan https pada url
-  const safeUrl = url => url.replace(/^http:\/\//i, 'https://');
+    // assets image
+    { url: '/assets/img/icon/iconfinder_Soccer_192x192.png', revision },
+    { url: '/assets/img/icon/iconfinder_Soccer_512x512.png', revision },
+    { url: '/assets/img/img/undraw_Choose_bwbs.svg', revision },
+    { url: '/assets/img/img/undraw_server_down_s4lk.svg', revision },
+    { url: '/assets/img/img/undraw_warning_cyit.svg', revision },
+    { url: '/assets/img/vector/ellipse1.svg', revision },
+    { url: '/assets/img/vector/ellipse2.svg', revision },
+    { url: '/assets/img/vector/ellipse3.svg', revision },
 
-  // menambahkan ke cache dari server
-  const addToCache = async () => {
-    const cache = await caches.open(CACHE_NAME);
-    const response = await fetch(event.request);
-    cache.put(event.request.url, response.clone());
-    console.log(`[Service Worker]: caching ${event.request.url}`);
-    return response;
-  };
+    // assets js
+    { url: '/assets/js/api.js', revision },
+    { url: '/assets/js/component-error.js', revision },
+    { url: '/assets/js/indexed-db.js', revision },
+    { url: '/assets/js/loading.js', revision },
+    { url: '/assets/js/navbar.js', revision },
+    { url: '/assets/js/notification.js', revision },
+    { url: '/assets/js/register-sw.js', revision },
+    
+    // vendor
+    { url: '/vendor/css/materialize.min.css', revision },
+    { url: '/vendor/js/materialize.min.js', revision },
+    { url: '/vendor/js/idb.js', revision },
+    
+    // manifest
+    { url: '/manifest.json', revision },
+    
+    // icon
+    { url: '/favicon.ico', revision },
+    
+    // pages
+    { url: '/match.html', revision },
+    { url: '/myteam.html', revision },
+    { url: '/team.html', revision },
+    { url: '/index.html', revision },
+  ], {
+    // mengabaikan query search pada url
+    ignoreURLParametersMatching: [/.*/]
+  });
 
-  // cek di cache
-  const checkOnCache = async () => {
-    const response = await caches.match(event.request, { ignoreSearch: true });
-    return response || fetch(event.request);
-  }
-
-  event.respondWith(
-    safeUrl(event.request.url).includes(BASE_URL)
-      ? addToCache()
-      : checkOnCache()
+  // membuat data api offline
+  workbox.routing.registerRoute(
+    new RegExp('https://api.football-data.org/v2'),
+    new workbox.strategies.StaleWhileRevalidate({
+      cacheName: 'api',
+    })
   );
-});
+
+} else 
+  console.log(`[Workbox]: Workbox tidak tersedia`);
 
 // event push
 self.addEventListener('push', event => {
@@ -112,7 +95,7 @@ self.addEventListener('push', event => {
   // mengatur notifikasi
   const options = {
     body,
-    icon: '/assets/img/icon/iconfinder_Soccer_512x512.png',
+    icon: './assets/img/icon/iconfinder_Soccer_512x512.png',
     vibrate: [100, 50, 50],
     data: {
       dateOfArrival: Date.now(),
@@ -124,4 +107,4 @@ self.addEventListener('push', event => {
     // menampilkan notifikasi
     self.registration.showNotification('EPL News', options)
   );
-})
+});
