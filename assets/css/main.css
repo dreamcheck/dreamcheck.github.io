@@ -1,9 +1,3 @@
-@import url('vector.css');
-@import url('error.css');
-@import url('page_index.css');
-@import url('page_team.css');
-@import url('page_match.css');
-
 body {
   background: rgb(248, 248, 250);
 }
